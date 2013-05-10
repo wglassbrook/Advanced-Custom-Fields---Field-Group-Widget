@@ -1,4 +1,4 @@
-#Advanced Custom Fields Field Group Widget
+#Advanced Custom Fields - Field Group Widget
 
 #Description:
 A WordPress widget used allongside the fantastic Advanced Custom Fields plugin. This widget will allow you to select from a list of your current field groups, create a folder and empty template file in your themes directory, then display the contents of this template file in your specified location. Perfect for use with the "Options" add-on for Advanced Custom Fields.
