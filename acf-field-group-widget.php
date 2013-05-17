@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ACF Field Group Widget
  * Description: A widget that displays content from a field group. Used with Advanced Custom Fields.
- * Version: 0.1
+ * Version: 0.2
  * Author: Wayne Glassbrook
  * Author URI: http://www.designly.net
  */
