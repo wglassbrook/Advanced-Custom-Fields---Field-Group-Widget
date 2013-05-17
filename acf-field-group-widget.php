@@ -80,28 +80,32 @@ class ACF_Field_Group_Widget extends WP_Widget {
         $temp_file = TEMPLATEPATH . '/acf-widgets/' . $groupSlug . '-template.php'; //Instantiate the actual template file
         $temp_uri = get_template_directory_uri() . '/acf-widgets/' . $groupSlug . '-template.php'; //Instantiate the URI for the template file
 
-        /* Look to see if there is already an '/acf-widgets/' directory in the theme. If not, we create one with 775 permissions so it can be read and writen to. */
-        if(!is_dir($temp_dir)){
-            $old_umask = umask(0);
-            $mkdir = mkdir($temp_dir, 0775, true);
-            umask($old_umask);
-        }
 
-        /* Look to see if we already have a ACF Widget Template file. */
-        if (file_exists($temp_file)) {
+        if($groupID){
 
-            /* If we do, then we return its contents. */
-            include($temp_file);
+            /* Look to see if there is already an '/acf-widgets/' directory in the theme. If not, we create one with 775 permissions so it can be read and writen to. */
+            if(!is_dir($temp_dir)){
+                $old_umask = umask(0);
+                $mkdir = mkdir($temp_dir, 0775, true);
+                umask($old_umask);
+            }
 
-        } else {
+            /* Look to see if we already have a ACF Widget Template file. */
+            if (file_exists($temp_file)) {
 
-            /* If not, we create one in our '/acf-widgets/' directory. Pre-populate it with some instructive text. Also set with 775 permissions. */
-            $fh = fopen($temp_file, 'a+');
-            fwrite($fh, '<p><strong>Template Empty!</strong><br /> Create an ACF Widget Template at ' . $temp_uri . '</p><p><strong>Name: </strong>' . $groupName . '<br/><strong>Slug: </strong>' . $groupSlug . '<br/><strong>ID: </strong>' . $groupID . '</p>' . "\n");
-            fclose($fh);
-            chmod($temp_file, 0775);
-            include($temp_file);
+                /* If we do, then we return its contents. */
+                include($temp_file);
 
+            } else {
+
+                /* If not, we create one in our '/acf-widgets/' directory. Pre-populate it with some instructive text. Also set with 775 permissions. */
+                $fh = fopen($temp_file, 'a+');
+                fwrite($fh, '<p><strong>Template Empty!</strong><br /> Create an ACF Widget Template at ' . $temp_uri . '</p><p><strong>Name: </strong>' . $groupName . '<br/><strong>Slug: </strong>' . $groupSlug . '<br/><strong>ID: </strong>' . $groupID . '</p>' . "\n");
+                fclose($fh);
+                chmod($temp_file, 0775);
+                include($temp_file);
+
+            }
         }
 
         echo $after_widget;
