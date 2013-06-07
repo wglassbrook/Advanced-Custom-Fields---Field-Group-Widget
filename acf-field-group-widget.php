@@ -13,6 +13,7 @@ class ACF_Field_Group_Widget extends WP_Widget {
     function ACF_Field_Group_Widget() {
         $widget_ops = array('classname' => 'acf_field_group_widget', 'description' => 'Displays contents of an ACF Field Group' );
         parent::WP_Widget('ACF_Field_Group_Widget', 'ACF Field Group Widget', $widget_ops);
+
     }
 
     /* Instantiate our default variables for the widget */
@@ -50,7 +51,7 @@ class ACF_Field_Group_Widget extends WP_Widget {
 
         /* A little debug info. After a Field group is selected from the select box, displays the Name, Slug, and ID of the selected Field Group in the widget options. May be helpful when writing the template. */
         if($groupID){
-            echo '<p><strong>Name: </strong>' . $groupName . '<br/><strong>Slug: </strong>' . $groupSlug . '<br/><strong>ID: </strong>' . $groupID . '</p>';
+            echo '<p><strong>Name: </strong>' . $groupName . '<br/><strong>Slug: </strong>' . $groupSlug . '<br/><strong>ID: </strong>' . $groupID . '<br/><strong>Instance Name: </strong>' . $this->id . '</p>';
         }
     }
 
@@ -66,7 +67,7 @@ class ACF_Field_Group_Widget extends WP_Widget {
         extract($args, EXTR_SKIP);
 
         $groupID = $instance['group-id'];
-
+        $instID = $args['widget_id'];
         /* Instantiating these variables again?! I don't think this is how it's supposed to be done. Perhaps I can call the GLOBAL $var? Not an experienced PHP coder over here. */
         global $wpdb;
         $groupName = $wpdb->get_var("SELECT post_title FROM $wpdb->posts WHERE ID =  '$groupID' ");
@@ -77,8 +78,8 @@ class ACF_Field_Group_Widget extends WP_Widget {
         /* Thought this might be helpful to some people. Since I have no idea what kind of field data users are going to be using, the thought was to call for a template from the current theme. Since there isnt already a ACF Widget Template file in the theme, why not make a home for it and build a placeholder template file? Perhaps this should be written to the plugin directory? I usually create ACF fields on a theme by theme basis, this may be the best option. I'm open to suggestion though */
 
         $temp_dir = TEMPLATEPATH . '/acf-widgets/'; //Instantiate the template directory
-        $temp_file = TEMPLATEPATH . '/acf-widgets/' . $groupSlug . '-template.php'; //Instantiate the actual template file
-        $temp_uri = get_template_directory_uri() . '/acf-widgets/' . $groupSlug . '-template.php'; //Instantiate the URI for the template file
+        $temp_file = TEMPLATEPATH . '/acf-widgets/' . $groupSlug . '-' . $instID . '-template.php'; //Instantiate the actual template file
+        $temp_uri = get_template_directory_uri() . '/acf-widgets/' . $groupSlug . '-' . $instID .  '-template.php'; //Instantiate the URI for the template file
 
 
         if($groupID){
@@ -100,7 +101,7 @@ class ACF_Field_Group_Widget extends WP_Widget {
 
                 /* If not, we create one in our '/acf-widgets/' directory. Pre-populate it with some instructive text. Also set with 775 permissions. */
                 $fh = fopen($temp_file, 'a+');
-                fwrite($fh, '<p><strong>Template Empty!</strong><br /> Create an ACF Widget Template at ' . $temp_uri . '</p><p><strong>Name: </strong>' . $groupName . '<br/><strong>Slug: </strong>' . $groupSlug . '<br/><strong>ID: </strong>' . $groupID . '</p>' . "\n");
+                fwrite($fh, '<p><strong>Template Empty!</strong><br /> Create an ACF Widget Template at ' . $temp_uri . '</p><p><strong>Name: </strong>' . $groupName . '<br/><strong>Slug: </strong>' . $groupSlug . '<br/><strong>ID: </strong>' . $groupID . '<br/><strong>Instance Name: </strong>' . $this->id . '</p>' . "\n");
                 fclose($fh);
                 chmod($temp_file, 0775);
                 include($temp_file);
